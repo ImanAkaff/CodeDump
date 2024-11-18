@@ -1,0 +1,28 @@
+def pigGame():
+    score1 = 0
+    score2 = 0 
+    user = player()
+    while score1 < 100 and score2 < 100:
+        #if user 1 is picked
+        if user == "1":
+            print("You wil be player 1")
+            total = userTurn()
+            score1+=total
+            print("\tPlayer 1 score is:\t",score1)
+            print("\tComputer score:\t", score2)
+            if score1 > 100:
+                print("Player 1 Wins!")
+                break
+
+            user = "2"    
+        if user =="2":
+            print("You will be player 2")
+            total = computerTurn()
+            score2+=total
+            print("\tPlayer 1 score:\t",score1)
+            print("\tComputer score:\t", score2)
+            if score2 > 100:
+                print("Computer Wins!")
+                break
+        user ="1"
+pigGame()
