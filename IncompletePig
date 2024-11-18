@@ -1,0 +1,199 @@
+import random
+#pt 1
+def roll():
+    return random.randint(1,6)
+def holdAt20Turn(target = 20, score = 0):
+    total = 0 
+    while total < 20:
+        points = roll() #points you rolled
+        if points == 1:
+            total = 0
+            break
+        total += points #totals up the points till you get 20 
+        #print("Roll:", points, sep="\t")
+    #print("Turn total:", total, sep="\t")
+    return total
+
+
+#pt 2
+def holdAt20TurnSim(numSims, target): #sim = simulation
+    results = {}
+    for _ in range(numSims, target):
+       turnTotal = holdAt20Turn(target)
+       if turnTotal not in results: #if the total from the turn is not in the dictionary
+           results[turnTotal] = 0 #initialize a count at 0
+       results[turnTotal] += 1 #incriment count of that total by 1 for numSims times
+    for total in results: #iteratre through results key which is the total 
+        print(total, results[total]/numSims, sep="\t") #print out each total, and amount of times you got that total divided by 
+                                                       #the number of simulations to get the percent probability
+#numSims = int(input("How many Hold-at-20 turn simulations "))
+#holdAt20TurnSim(numSims, target=20)
+
+#pt 3
+def holdAtXTurnSim(numSims, target): #target is a value that can be changed but also has a default value if none is given (see 1st func)
+    results = {}
+    for num in range(target,target+6):
+        results[num] = 0 
+
+    for _ in range(numSims, target):
+       turnTotal = holdAt20Turn(target)
+       if turnTotal not in results: #if the total from the turn is not in the dictionary
+           results[turnTotal] = 0 #initialize a count at 0
+       results[turnTotal] += 1 #incriment count of that total by 1 for numSims times
+    for total in results: #iteratre through results key which is the total 
+        print(total, results[total]/numSims, sep="\t") #print out each total, and amount of times you got that total divided by 
+#pt 4
+def holdAt20OrGoal(target=20):
+    #roll until a 1 (pig)
+    #turn total is >=20
+    # score + turntotal > 100
+    #score is the inputted score from user
+    total = 0 #total is the turn total 
+    score = 0
+    while total < target and total + score < 100:
+        points = roll()
+        print("Roll:", points)
+        if points == 1:
+            total = 0
+            break
+        total+=points
+    print("Turn Total:", total)
+    print("New Score", score+ total)
+    return score
+#score = int(input("Score?\t"))
+#holdAt20OrGoal()
+
+
+#pt 5
+def holdAt20OrGoalGame(target = 20):
+    #player rolls till they get 20 turntotal
+    #if they get 20 turntotal add it to new score
+    #keep adding the turntotal to new score until it reaches 100
+    #if you roll a pig then the new score and turntotal goes to 0
+    total = 0
+    newScore = 0
+    while newScore < 100:
+        total = 0 #resets total to zero if pig is rolled or 20 is reached
+        while total < target and total + newScore < 100:
+            points = roll()
+            print("Roll\t", points)
+            if points == 1:
+                total = 0
+                break
+            total += points
+        print("Turn Total:\t", total) 
+        newScore += total
+        print("New Score:\t", newScore)
+    return newScore
+#print(holdAt20OrGoalGame())
+
+#pt 6
+def avgPigTurns(games):
+    turns = 0
+    for _ in range(games):
+        turns += holdAt20Turn()
+    average = turns/games
+    return average
+#games = int(input("Games?\t"))
+#print(avgPigTurns(games))
+
+#pt 7
+def twoPlayerPig(target = 20):
+    #player rolls until 1(pig), turntotal > 20, or score + turntotal > 100
+    #print out player 1 and player 2 score before each 
+    score1 = 0
+    score2 = 0
+    total = 0
+    
+    print("Player 1 score:\t", score1)
+    print("Player 2 score:\t", score2)
+    while score1<100 and score2<100:
+        print("Its player 1's turn")
+        total = 0
+        while total < target and total + score1<100:
+            points = roll()
+            print("Roll: ", points)
+            if points==1:
+                total = 0
+                break
+            total += points
+        print("Turn Total is:", total)
+        score1 += total
+        print("New Score ", score1)
+        print("Player1 Score", score1)
+        print("Player 2 Score", score2)
+
+
+        total = 0 #reset turn total
+        print("Its player 2's turn")
+        while total < target and total+score2 < 100:
+            points = roll()
+            print("Roll: ", points)
+            if points==1:
+                total = 0
+                break
+            total += points
+        print("Turn Total is:", total)
+        score2 += total
+        print("New Score ", score2)
+        print("Player1 Score", score1)
+        print("Player 2 Score", score2)
+    return score1,score2
+#twoPlayerPig()
+
+#pt 8 
+def player(): #randomply selects which player will go first
+    return random.choice("12")
+#make a user function that I can call in the game function
+def userTurn(target = 20):
+    total = 0
+    while total < target:
+        rollOrHold = input("Roll/Hold? (Enter)")
+        if rollOrHold:
+            break
+        else:     
+            points = roll()
+            print("Roll:\t", points)
+            if points == 1:
+                total = 0
+                break
+            total+=points
+    print("Turn total is:\t", total)
+    return total
+#make a computer player function that I can call in the game 
+def computerTurn(target = 20):
+    total = 0
+    while total < target:
+        points = roll()
+        print("Roll:\t", points)
+        if points == 1:
+            total = 0
+            break
+        total+=points
+    print("Turn total is:\t", total)
+    return total
+
+
+
+def pigGame():
+    score1 = 0
+    score2 = 0 
+    user = player()
+    while score1 < 100 and score2 < 100:
+        if user == "1":
+            print("You wil be player 1")
+            total = userTurn()
+            score1+=total
+            print("Player 1 score is:\t",score1)
+            print("Player 2's Turn")
+        if user == "2":
+            print("You will be player 2")
+            total = computerTurn()
+            score2+=total
+            print("Player 2 score:\t", score2)
+pigGame()
+
+
+
+        
+ 
